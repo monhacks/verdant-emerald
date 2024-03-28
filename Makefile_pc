@@ -86,13 +86,13 @@ MAKEFLAGS += --no-print-directory
 # Secondary expansion is required for dependency variables in object rules.
 .SECONDEXPANSION:
 
-.PHONY: all rom clean compare tidy tools mostlyclean clean-tools $(TOOLDIRS) libagbsyscall modern tidymodern tidynonmodern
+.PHONY: all rom clean compare tidy tools mostlyclean clean-tools pc $(TOOLDIRS) libagbsyscall modern tidymodern tidynonmodern
 
 infoshell = $(foreach line, $(shell $1 | sed "s/ /__SPACE__/g"), $(info $(subst __SPACE__, ,$(line))))
 
 # Build tools when building the rom
 # Disable dependency scanning for clean/tidy/tools
-ifeq (,$(filter-out all rom compare modern,$(MAKECMDGOALS)))
+ifeq (,$(filter-out all rom compare modern pc,$(MAKECMDGOALS)))
 $(call infoshell, $(MAKE) tools)
 else
 NODEP := 1
@@ -133,6 +133,8 @@ AUTO_GEN_TARGETS :=
 $(shell mkdir -p $(SUBDIRS))
 
 all: rom
+
+pc: rom
 
 tools: $(TOOLDIRS)
 

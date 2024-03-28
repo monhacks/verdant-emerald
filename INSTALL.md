@@ -1,6 +1,6 @@
 # Instructions
 
-These instructions explain how to set up the tools required to build **pokeemerald_pc**, which assembles the source files into a ROM.
+These instructions explain how to set up the tools required to build **pokeemerald_pc**, which assembles the source files into an EXE or ROM.
 
 These instructions come with notes which can be expanded by clicking the "<i>Note...</i>" text.
 In general, you should not need to open these unless if you get an error or if you need additional clarification.
@@ -103,9 +103,7 @@ Some tips before proceeding:
     ```
 
 ### Choosing where to store pokeemerald_pc (WSL2)
-WSL2 has its own file system that's not natively accessible from Windows.
-
-Windows files *are* accessible from WSL, but accessing Windows files using WSL2 is incredibly slow, so you want to store your files in the WSL filesystem.
+WSL has its own file system. Windows files *are* accessible from WSL, but accessing Windows files using WSL2 is incredibly slow, so you want to store your files in the WSL filesystem.
 
 We'll make a `decomps` folder for organisation:
 
@@ -262,22 +260,22 @@ If this works, then proceed to [Installation](#installation).
 
 If pokeemerald_pc is not already downloaded (some users may prefer to download pokeemerald_pc via a git client like GitHub Desktop), run:
 
-    ```bash
-    git clone https://github.com/Kurausukun/pokeemerald -b pc_port pokeemerald_pc
-    ```
+```bash
+git clone https://github.com/Kurausukun/pokeemerald -b pc_port pokeemerald_pc
+```
 
-    <details>
-        <summary><i>Note for WSL2...</i></summary>
+<details>
+    <summary><i>Note for WSL2...</i></summary>
 
-    >   If you get an error stating `fatal: could not set 'core.filemode' to 'false'`, then run the following commands:
-    >   ```bash
-    >   cd
-    >   sudo umount /mnt/c
-    >   sudo mount -t drvfs C: /mnt/c -o metadata,noatime
-    >   cd <folder where pokeemerald_pc is to be stored>
-    >   ```
-    >   Where *\<folder where pokeemerald_pc is to be stored>* is the path of the folder [where you chose to store pokeemerald_pc](#Choosing-where-to-store-pokeemerald_pc-WSL2). Then run the `git clone` command again.
-    </details>
+>   If you get an error stating `fatal: could not set 'core.filemode' to 'false'`, then run the following commands:
+>   ```bash
+>   cd
+>   sudo umount /mnt/c
+>   sudo mount -t drvfs C: /mnt/c -o metadata,noatime
+>   cd <folder where pokeemerald_pc is to be stored>
+>   ```
+>   Where *\<folder where pokeemerald_pc is to be stored>* is the path of the folder [where you chose to store pokeemerald_pc](#Choosing-where-to-store-pokeemerald_pc-WSL2). Then run the `git clone` command again.
+</details>
 
 Now move on to [downloading the SDL Libraries](#sdl_libraries).
 
@@ -285,7 +283,7 @@ Now move on to [downloading the SDL Libraries](#sdl_libraries).
 
 1. Download SDL from: https://github.com/libsdl-org/SDL/releases. You need the Development Libraries for MinGW specifically, and the Runtime Library for 32-bit Windows as well.
     <details>
-        <summary><i>Releases</i></summary>
+        <summary><i>Note for Releases</i></summary>
 
     >   You can download any recent version of SDL2.
     >   The Development Libaries for MinGW will be called SDL2-devel-x.xx.x-mingw.tar.gz
@@ -296,11 +294,10 @@ Now move on to [downloading the SDL Libraries](#sdl_libraries).
 
 3. Uncompress the Runtime libraries, then move the SDL2.dll file into your **pokeemerald_pc** folder.
 
-4. Adjust the path to SDL in **pokeemerald_pc**'s `Makefile_pc` if needed, like so:
+4. Use your preferred text editor to adjust the path to SDL in **pokeemerald_pc**'s `Makefile_pc` if needed, like so:
 
-```make
-SDL_DIR := $(CURDIR)/SDL2-x.xx.x/i686-w64-mingw32
-```
+> SDL_DIR := $(CURDIR)/SDL2-x.xx.x/i686-w64-mingw32
+
 Where SDL2-x.xx.x is your exact version of SDL2.
 
 Finally, you are ready to [build **pokeemerald_pc**](#build-pokeemerald_pc)
@@ -311,31 +308,30 @@ If you aren't in the pokeemerald_pc directory already, then **change directory**
 cd pokeemerald_pc
 ```
 
-To build **pokeemerald_pc.exe** (Note: to speed up builds, see [Parallel builds](#parallel-builds)):
+To build **pokeemerald_pc.exe**:
 ```bash
-make tools
-make -f Makefile_pc
+make pc
 ```
 If it has built successfully you will have the output file **pokeemerald_pc.exe** in your project folder.
 
-To build **pokeemerald_pc.gba** (Note: to speed up builds, see [Parallel builds](#parallel-builds)):
+To build **pokeemerald_pc.gba**:
 ```bash
 make
 ```
 If it has built successfully you will have the output file **pokeemerald_pc.gba** in your project folder.
 
-    <details>
-        <summary><i>Note for -jN...</i></summary>
+<details>
+    <summary><i>Note for -jN...</i></summary>
 
-    >   To speed up the build time add -jN to your command.
-    >   e.g., `make -f Makefile_pc -jN`
-    >   
-    >   "N" stands for the number of CPU Threads you want to assign to the compiler.
-    >   The more threads, the faster it'll go.
-    >
-    >   Use command `nproc` to get the total core count of your system.
-    >   `nproc` is not available on macOS. The alternative is `sysctl -n hw.ncpu`.
-    </details>
+>   To speed up the build time add -jN to your command.
+>   e.g., `make -f Makefile_pc -jN`
+>   
+>   "N" stands for the number of CPU Threads you want to assign to the compiler.
+>   The more threads, the faster it'll go.
+>
+>   Use command `nproc` to get the total core count of your system.
+>   `nproc` is not available on macOS. The alternative is `sysctl -n hw.ncpu`.
+</details>
 
 # Building guidance
 
